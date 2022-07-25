@@ -1,0 +1,632 @@
+
+<style>
+    .plugin_page{
+        margin-top:16px;
+        overflow-y:scroll;
+        height: 520px;
+    }
+    .plugin_page::-webkit-scrollbar {display:none}
+
+    .label-text{
+        text-align: right;
+        position: relative;
+        top:12px;
+        margin-left: 16px;
+    }
+
+    .configure-box{
+
+    }
+
+    .configure-box  .configure-block{
+      padding: 25px 0;
+    }
+
+
+    .configure-title{
+      line-height: 30px;
+      font-size: 14px;
+      border-bottom: 1px solid #e7e7e7;
+      padding: 5px 5px 8px 10px;
+      font-weight: bold;
+      color: #666;
+    }
+
+     .configure-box .line .line-title{
+      font-size: 12px;
+      color: #333;
+      display: inline-block;
+      width: 320px;
+      text-align: right;
+      padding-right: 15px;
+      height: 30px;
+      line-height: 30px;
+      vertical-align: top;
+    }
+
+    .configure-box .line input[type="text"]{
+      width: 400px;
+    }
+
+    .configure-box .line .line-tips{
+      margin-top: 5px;
+      color: #999;
+      margin-left: 135px;
+    }
+    .configure-box .line>button{
+      height: 30px;
+      vertical-align: top;
+    }
+
+    .configure-box .line .line-input input,
+    .configure-box .line .line-form input{
+      height: 30px;
+      line-height: 30px;
+    }
+
+    .configure-box .line .line-input{
+      display: inline-block;
+      position: relative;
+    }
+    .configure-box .line .line-form{
+      display: inline-block;
+      vertical-align: top;
+    }
+    .configure-box .line .line-form .ssh-item{
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+      float: none;
+      vertical-align: middle;
+    }
+    .line-row,.line-row-tips{
+      height: 30px;
+      line-height: 30px;
+      display: inline-block;
+      float: left;
+    }
+    .line-row-tips{
+      margin-left: 10px !important;
+      color: #999;
+    }
+
+</style>
+
+<div class="bt-form">
+    <div class="bt-w-main">
+        <!--菜单部分-->
+        <div class="bt-w-menu">
+            <p class="bgw" onclick="frps.switch_page('index')" >首页</p>
+            <p onclick="frps.switch_page('config')" >配置</p>
+            <p onclick="frps.switch_page('cert')" >证书</p>
+            <p onclick="frps.switch_page('log')" >日志</p>
+            <p onclick="frps.switch_page('about')" >关于</p>
+        </div>
+        <!--内容部分-->
+        <div class="bt-w-con pd15">
+            <div class="plugin_body">
+                <div class="plugin_page" id="page_index">
+                    <from class="form-horizontal" role="from">
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                frps 内核版本
+                              </div>
+                             <div class="col-sm-4">
+                                <select type="text" class="form-control" id="frps_version" >
+                                </select>
+                             </div>
+                             <div class="col-sm-4">
+                                 <button onclick="frps.button_update_version()" class="btn btn-default">切换版本</button>
+                                 <button onclick="frps.button_refresh_version()" class="btn btn-default">更新列表</button>
+                             </div>
+
+                         </div>
+
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                frps 运行状态
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_status">
+                             </div>
+                             <div class="col-sm-5">
+                                 <button class="btn btn-success" onclick="frps.button_update_status('start')" style="margin-right: 8px"><span class="glyphicon glyphicon-play" style="margin-right: 8px"></span>启动</button>
+                                 <button class="btn btn-danger"  onclick="frps.button_update_status('stop')" style="margin-right: 8px;background-color: red"> <span class="glyphicon glyphicon-stop" style="margin-right: 8px"></span>停止</button>
+                                 <button class="btn btn-warning" onclick="frps.button_update_status('reload')" ><span class="glyphicon glyphicon-refresh" style="margin-right: 8px"></span>重启</button>
+                             </div>
+                         </div>
+
+                        <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                服务器IP
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_index_config_server_addr">
+                             </div>
+                         </div>
+
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                通讯端口 （TCP）
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_index_config_bind_port">
+                             </div>
+                             <div class="col-sm-5">
+                                 服务端监听端口
+                             </div>
+                         </div>
+
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                通讯端口 （UDP）
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white" id="frps_index_config_bind_udp_port">
+                             </div>
+                             <div class="col-sm-5">
+                                用于辅助创建 P2P 连接
+                             </div>
+                         </div>
+
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                通讯端口 （KCP）
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_index_config_kcp_bind_port">
+                             </div>
+                             <div class="col-sm-5">
+                                用于接收采用 KCP 连接的 frpc (牺牲部分带宽，降低延迟)
+                             </div>
+                         </div>
+
+                        <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                HTTP 端口
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_index_config_vhost_http_port">
+                             </div>
+                             <div class="col-sm-6">
+                                默认为 8080,改成80端口请检查是否有nginx/apache占用
+                             </div>
+                         </div>
+
+
+
+                        <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                HTTPS 端口
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_index_config_vhost_https_port">
+                             </div>
+                             <div class="col-sm-6">
+                                默认为 8443,改成443 端口请检查是否有nginx/apache占用
+                             </div>
+                         </div>
+
+
+
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                鉴权模式
+                              </div>
+                             <div class="col-sm-3">
+                                 <input class="form-control" readonly style="background-color: white"  id="frps_index_config_authentication_method">
+                             </div>
+                             <div class="col-sm-5">
+                                 token / oidc
+                             </div>
+                         </div>
+
+                         <div class="form-group" style="height: 48px">
+                              <div class="col-sm-2 label-text" >
+                                通讯密钥
+                              </div>
+                             <div class="col-sm-5">
+                                 <input class="form-control"  readonly style="background-color: white;font-size: 12px"  id="frps_index_config_token">
+                             </div>
+                             <div class="col-sm-3">
+                                仅鉴权模式为 token 时生效
+                             </div>
+                         </div>
+                    </from>
+                    <hr/>
+                    <div class="footer-help">
+                        <p><span style="color: red">友情提醒:</span><br/>
+                             1. 根据<a href="https://dwz.cn/8IuubcLh" class="btlink" target="_blank">《非经营性互联网信息服务备案管理办法》</a>规定,在中华人民共和国境内提供非经营性互联网信息服务，应当办理备案!<br/>
+                             2. 如果您的域名没有备案,ISP提供商可能会屏蔽/阻断您的WEB请求<br/>
+                        </p>
+                    </div>
+                </div>
+                <div class="plugin_page" id="page_config" style="display: none">
+
+                </div>
+                <div class="plugin_page" id="page_cert" style="display: none">
+                    <div class="header-help" style="height: 28px">
+                        <p>
+                            <span style="color: red">注意:</span>客户端证书一经签发,CA永久生效,即使您在这里删除了证书,客户端也一样有效
+                            <button class="btn btn-success"  style="float: right;" onclick="frps.button_download_ca()">下载CA 证书</button>
+                            <button class="btn btn-success" onclick="frps.button_create_cert()" style="float: right;margin-right: 16px">新建证书</button>
+                        </p>
+                    </div>
+                    <hr/>
+                    <div class="cert-table">
+                        <table class="table table-hover">
+                            <thead><th>Id</th><th style="width: 500px">证书标题</th><th>签发时间</th><th>操作</th></thead>
+                            <tbody id="cert-datas"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="plugin_page" id="page_log" style="display: none">
+                     <textarea id="log_content" class="form-control" readonly style="width: 100%;height: 500px;background-color: black;color: white"></textarea>
+                </div>
+                <div class="plugin_page" id="page_about" style="display: none">
+                    <div class="header-help" style="height: 28px">
+                        <p>
+                            本插件由基于 <a class="btlink" target="_blank"  href="https://upyun.com">又拍云CDN</a> 的 <a class="btlink" target="_blank" href="https://cdn.iw3c.com.cn">cdn.iw3c.com.cn </a> 提供镜像加速服务,
+                            <a class="btlink" target="_blank" href="https://blog.szhcloud.cn/blog/donate">感谢您的支持</a>
+                        </p>
+                    </div>
+                    <hr/>
+                    <div class="page-content" style="position:relative;font-size: 18px;left: -80px">
+                        <div class="row" style="margin-bottom: 16px">
+                            <div class="col-xs-6" style="text-align: right">插件名称:</div>
+                            <div class="col-xs-6" style="text-align: left">frps 服务端管理器</div>
+                        </div>
+                        <div class="row" style="margin-bottom: 16px">
+                            <div class="col-xs-6" style="text-align: right">程序版本:</div>
+                            <div class="col-xs-6" style="text-align: left"><span id="plugin_version"></span></div>
+                        </div>
+                        <div class="row" style="margin-bottom: 16px">
+                            <div class="col-xs-6" style="text-align: right">发布地址:</div>
+                            <div class="col-xs-6" style="text-align: left"><a class="btlink" target="_blank" href="https://blog.szhcloud.cn/blog/2022/07/10/bt-frp-plugin-update/">宝塔面板 frp 插件更新啦</a></div>
+                        </div>
+                        <div class="row" style="margin-bottom: 16px">
+                            <div class="col-xs-6" style="text-align: right">作者邮箱:</div>
+                            <div class="col-xs-6" style="text-align: left">mail@szhcloud.cn</div>
+                        </div>
+
+                        <center>
+                            <a class="btn btn-success btn-sm" href="https://blog.szhcloud.cn/blog" target="_blank" title="去作者博客看看其他有趣的内容？">作者博客</a>
+                            <a class="btn btn-success btn-sm" href="https://url.app.atonal.cn/?s=frps" target="_blank" title="去github Fork一下本项目？">开源地址</a>
+                            <a class="btn btn-success btn-sm" href="https://www.bt.cn/bbs/thread-34942-1-1.html" target="_blank" title="你可以在此处与大家一起讨论关于本插件的问题！">论坛讨论</a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--JS脚本部分，不要将JS脚本写在其它地方-->
+<script src="https://cdn.iw3c.com.cn/bt-plugin/ad.js"></script>
+<script type="text/javascript">
+     $("#setBox").click(function () {
+        if ($(this).prop("checked")) {
+          $("input[name=id]").prop("checked", true);
+        } else {
+          $("input[name=id]").prop("checked", false);
+        }
+      });
+
+    //定义窗口尺寸
+    $('.layui-layer-page').css({ 'width': '900px' });
+
+    //左测菜单切换效果
+    $(".bt-w-menu p").click(function () {
+        $(this).addClass('bgw').siblings().removeClass('bgw')
+    });
+
+    function format_time(time=false){
+        if (time) var date = new Date(time*1000);
+        else  date = new Date();
+        var year = date.getFullYear(),
+        month = ("0" + (date.getMonth() + 1)).slice(-2),
+        sdate = ("0" + date.getDate()).slice(-2),
+        hour = ("0" + date.getHours()).slice(-2),
+        minute = ("0" + date.getMinutes()).slice(-2),
+        second = ("0" + date.getSeconds()).slice(-2);
+        var result = year + "-"+ month +"-"+ sdate +" "+ hour +":"+ minute +":" + second;
+        return result;
+    }
+
+   var  frps = {
+        pages:['index','config','log','about','cert'],
+        loading:false,
+        config_group:[],
+        config_list:{},
+        more_configs:{},
+        switch_page:function (page){
+            console.log("switch to page [" + page + "]");
+            if(frps.pages.indexOf(page) != -1) {
+                $('.plugin_page').hide();
+                $('#page_' + page).css('display','');
+                eval("frps.show_page_" + page + "()");
+            }
+            else console.error("page [" + page + "] not found!");
+        },
+        show_page_index:function(){
+            frps.send_request('get_server_ip','get',{},(res)=>{
+                $("#frps_index_config_server_addr").val(res.data);
+            })
+            frps.send_request('get_frp_cloud_versions','get',{},(res)=>{
+               var select = "";
+               res.data.forEach((val)=>{
+                   select = select  + "<option value='"+val+"'>" + val + "</option>";
+               })
+                $("#frps_version").html('');
+                $("#frps_version").append(select);
+                 frps.send_request('get_global_config','get',{} , (res)=>{
+                  $('#frps_version').val(res.data.core_version);
+                  $("#plugin_version").html(res.data.plugin_version);
+                })
+            })
+            frps.show_running_status();
+            frps.show_index_config();
+
+        },
+        show_page_log:function(){
+            frps.send_request('get_frps_log','get',{},(res)=>{
+                $("#log_content").html(res.data);
+            })
+        },
+        show_page_config:function (){
+              frps.send_request('get_frps_config_group_list','get',{},(res)=>{
+                  frps.config_group = res.data;
+                  frps.send_request('get_frps_configs_list','get',{},(res)=>{
+                       var html = "";
+                       frps.config_group.forEach((group)=>{
+                           html = html + "<div class=\"panel-config configure-box\"><div class=\"configure-title\">"
+                           + group['value'] + "</div><div class=\"configure-block\">" + frps.format_config_content(res.data[group['name']],group['name']);
+                               "</div></div>"
+                       })
+                      $("#page_config").html(html);
+                      frps.config_group.forEach((group)=>{
+                          res.data[group['name']].base.forEach((bconfig)=>{
+                               if(bconfig['type'] == 'bool'){
+                                   if(bconfig['value']) $("#config_"+bconfig['name']).prop('checked',true);
+                                   else $("#config_"+bconfig['name']).prop('checked',false);
+                               }
+                          })
+                          res.data[group['name']].dev.forEach((bconfig)=>{
+                               if(bconfig['type'] == 'bool'){
+                                   if(bconfig['value']) $("#config_"+bconfig['name']).prop('checked',true);
+                                   else $("#config_"+bconfig['name']).prop('checked',false);
+                               }
+                          })
+                      });
+                  })
+              })
+        },
+        show_page_about:function(){},
+        show_page_cert:function (){
+            frps.send_request('get_cert_list','get',{},(res)=> {
+                var list = res.data;
+                list.forEach((item) => {
+                    item.date = format_time(item.create_time);
+                })
+                var html = "";
+                var id = 1;
+                list.forEach((item) => {
+                    html = html + '<tr><td>' + id + '</td><td>' + item.name + '</td><td>' + item.date + '</td><td>'
+                        + "<a class='btlink' href='javascript:;' style='margin-right:8px' onclick='frps.button_delete_cert("+item.id+")'>删除</a>"
+                         + "<a class='btlink' href='javascript:;' onclick='frps.button_detail_cert("+item.id+")'>详情</a>"
+                        + '</td></tr>'
+                })
+                $("#cert-datas").html(html);
+            });
+       },
+        format_config_content(configs,name){
+            var  content = "";
+            configs.base.forEach((baseConfig)=>{
+                if(baseConfig['value']  == null) baseConfig['value'] = '';
+                if(baseConfig['extend'] == null) baseConfig['extend'] = '';
+                if(baseConfig['support'] == null) baseConfig['support'] = '';
+                content = content + " <div class=\"line\" title=\""+baseConfig['name']+"\">"
+                + "<div class=\"line-title\">"+baseConfig["content"]+"</div><div class=\"line-input\">";
+                if(baseConfig['type'] == 'bool'){
+                    content = content + '<div class="line-row"><div class="ssh-item" style="margin-left: 0;padding: 0;">' +
+                        '<input class="btswitch btswitch-ios" value="'+baseConfig['value']+'" onchange="frps.update_config_value(\''+baseConfig['name']+'\',true)" id="config_'+baseConfig['name']+'" type="checkbox" />' +
+                        '<label class="btswitch-btn"  id="config_'+baseConfig['name']+'" style="margin-bottom: 0;"></label>' +
+                        '</div></div>'
+                }
+                else{
+                    content = content + '<div class="line-row">' +
+                        '<input type="text" class="bt-input-text" value="'+baseConfig['value']+'" onchange="frps.update_config_value(\''+baseConfig['name']+'\')" id="config_'+baseConfig['name']+'"  />' +
+                        '</div>'
+                }
+                var help = "";
+                if(baseConfig['extend'] || baseConfig['support']){
+                   if (baseConfig['support']) baseConfig['support'] = ',可选值:' + baseConfig['support'];
+                     help =  '<a href="javascript:;" target="_blank" rel="noreferrer noopener" title="'+baseConfig['extend'] +baseConfig['support'] +'" class="bt-ico-ask" style="cursor: pointer;">?</a>'
+                }
+                else help = "";
+                content  = content + '<div class="line-row-tips">' + help + '</div></div></div>'
+                frps.config_list[baseConfig['name']] = baseConfig['value'];
+            })
+
+            content =  content + "<a href='javascript:;' onclick=\"frps.show_dev_config(\'"+ name+"\')\"   id='dev_link_" + name +"'  class='btlink' style='margin-left: 16px'>更多配置</a><div style='display: none' id='show_dev_config_" + name +"' >";
+            frps.more_configs[name] = false;
+            configs.dev.forEach((baseConfig)=>{
+                if(baseConfig['value']  == null) baseConfig['value'] = '';
+                if(baseConfig['extend'] == null) baseConfig['extend'] = '';
+                if(baseConfig['support'] == null) baseConfig['support'] = '';
+                content = content + " <div class=\"line\" title=\""+baseConfig['name']+"\">"
+                + "<div class=\"line-title\">"+baseConfig["content"]+"</div><div class=\"line-input\">";
+                if(baseConfig['type'] == 'bool'){
+                    content = content + '<div class="line-row"><div class="ssh-item" style="margin-left: 0;padding: 0;">' +
+                        '<input class="btswitch btswitch-ios" value="'+baseConfig['value']+'"  id="config_'+baseConfig['name']+'" type="checkbox" />' +
+                        '<label class="btswitch-btn" id="config_'+baseConfig['name']+'" style="margin-bottom: 0;" onclick="frps.update_config_value(\''+baseConfig['name']+'\',true)"></label>' +
+                        '</div></div>'
+                }
+                else{
+                    var disabled = "";
+                    // 锁定CA 控制项
+                    if(baseConfig['name']== 'tls_cert_file'  || baseConfig['name']== 'tls_key_file')
+                        disabled = "disabled = \"disabled\"";
+                    else disabled = ' onchange="frps.update_config_value(\''+baseConfig['name']+'\')"';
+                    content = content + '<div class="line-row">' +
+                        '<input type="text" class="bt-input-text" '+disabled+' value="'+baseConfig['value']+'" id="config_'+baseConfig['name']+'"  />' +
+                        '</div>'
+                }
+                var help = "";
+                if(baseConfig['extend'] || baseConfig['support']){
+                   if (baseConfig['support']) baseConfig['support'] = ',可选值:' + baseConfig['support'];
+                     help =  '<a href="javascript:;" target="_blank" rel="noreferrer noopener" title="'+baseConfig['extend'] +baseConfig['support'] +'" class="bt-ico-ask" style="cursor: pointer;">?</a>'
+                }
+                else help = "";
+                content  = content + '<div class="line-row-tips">' + help + '</div></div></div>'
+                frps.config_list[baseConfig['name']] = baseConfig['value'];
+            })
+
+            content = content + "</div>"
+            return content;
+        },
+        show_index_config:function(){
+            config_groups = 'bind_port,bind_udp_port,kcp_bind_port,authentication_method,token,vhost_http_port,vhost_https_port';
+            frps.send_request('get_frps_config_byname_group','post',{config_groups:config_groups},(res)=>{
+               res.data.forEach((item)=>{
+                   $("#frps_index_config_"+ item.name).val(item.value);
+               })
+            })
+
+        },
+        show_running_status:function(){
+             frps.send_request('get_frps_status','get',{},(res)=>{
+                $("#frps_status").val(res.data.running ? '运行中' : '已停止');
+                if(res.data.running) $("#frps_status").css('color','green');
+                else  $("#frps_status").css('color','red');
+            })
+        },
+        show_dev_config:function(name){
+            if(!frps.more_configs[name]){
+                frps.more_configs[name] = true;
+                $('#dev_link_' + name ).html('隐藏更多配置');
+                $('#show_dev_config_' + name ).css('display','');
+            }
+            else{
+                frps.more_configs[name] = false;
+                $('#dev_link_' + name ).html('更多配置');
+                $('#show_dev_config_' + name ).css('display','none');
+            }
+
+        },
+        button_update_version:function (){
+            frps.loading = layer.load();
+            var version = $('#frps_version').val();
+            frps.send_request('update_install_frps_version','post',{'version':version},(res)=>{
+                frps.check_update_version(res.data);
+            })
+        },
+        button_refresh_version:function(){
+            frps.send_request('update_frp_cloud_version','get',{},(res)=>{
+                layer.msg('刷新内核版本列表成功',{icon:1,time:1500});
+                frps.show_page_index();
+            })
+       },
+        check_update_version:function (task_id){
+            setTimeout(()=>{
+                frps.send_request('get_task_status','post',{'id':task_id},(res)=>{
+                      if(res.data.status==1){
+                          layer.close(frps.loading);
+                          layer.msg('切换版本['+res.data.other+']成功!',{icon:1,time:1500});
+                          frps.show_running_status();
+                      }
+                      else frps.check_update_version(task_id);
+                })
+            },1500)
+       },
+        button_update_status:function(status){
+          frps.loading = layer.load();
+          frps.send_request('update_frps_status','post',{'status':status},(res)=>{
+              layer.close(frps.loading);
+              if(!res.data){
+                  switch (status){
+                      case 'stop':  status = '停止'; break;
+                      case 'start': status = '启动'; break;
+                      case 'reload': status = '重启'; break;
+                  }
+                  layer.msg(status+'服务器失败,请检查是否有端口冲突,或查看运行日志',{icon:5});
+              }
+              frps.show_running_status();
+              frps.show_index_config();
+          })
+        },
+        update_config_value:function(name,is_bool){
+            if(is_bool){
+                frps.config_list[name] = $("#config_" + name).prop('checked') ? 0 : 1;
+                if( frps.config_list[name])  $("#config_" + name).prop('checked',true)
+                else  $("#config_" + name).prop('checked',false)
+            }
+            else{
+                frps.config_list[name] = $("#config_" + name).val()
+            }
+            frps.loading = layer.load();
+            frps.send_request('update_frps_config','post',frps.config_list,(res)=>{
+                layer.close(frps.loading);
+                if(res.code==0) layer.msg('修改配置参数成功',{icon:1,time:1500});
+                else layer.msg(res.msg,{icon:5,time:1500});
+            },15000)
+        },
+        button_create_cert:function(){
+            layer.prompt({formType: 0, value: '', title: '请输入证书名称',}, function(value, index, elem){
+                frps.loading = layer.load()
+                frps.send_request('create_cert','post',{'cert_name':value},(res)=>{
+                    layer.close(frps.loading);
+                    layer.close(index);
+                    frps.show_page_cert();
+                })
+            });
+        },
+        button_delete_cert:function(id){
+            frps.loading = layer.load()
+            frps.send_request('delete_cert','post',{'id':id},(res)=>{
+                  layer.close(frps.loading);
+                  frps.show_page_cert();
+            })
+        },
+        button_detail_cert:function(id){
+             frps.layer = layer.open({
+                    type: 2,
+                    area: ['700px', '340px'],
+                    fixed: false,
+                    title:'证书详情',
+                    content: '/frps/static/detail.html?cert_id=' + id
+                });
+        },
+        button_download_ca:function(){
+            frps.loading = layer.load();
+            frps.send_request('get_ca_info','get',{},(res)=>{
+                layer.close(frps.loading);
+                frps.download_file('ca.crt',res.data['ca_crt']);
+            })
+        },
+        download_file:function(filename,filecontent){
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(filecontent));
+            element.setAttribute('download', filename);
+            element.click();
+        },
+        send_request:function(api,type,data,success,timeout=8000,error){
+            $.ajax({
+                url:'/frps/' + api + ".json?t=" +  Date.now(),
+                type:type,
+                data:data,
+                timeout:timeout,
+                success:(res)=>{success(res)},
+                error:(err)=>{
+                    if(error) error(err);
+                    else layer.msg('请求接口[' + api + ']出错',{icon:5,timeout:1500});
+                }
+            })
+        }
+    }
+    frps.switch_page('index');
+
+
+
+</script>

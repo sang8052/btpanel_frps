@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>网站维护中</title>
+  <link rel="stylesheet" href="https://cdn.iw3c.com.cn/html5/debug-error/cdn/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.iw3c.com.cn/html5/debug-error/css/styles.css" />
+  <script type="text/javascript" src="https://cdn.iw3c.com.cn/html5/debug-error/cdn/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.iw3c.com.cn/html5/debug-error/cdn/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.iw3c.com.cn/html5/debug-error/js/jquery.countdown.js"></script>
+  <script type="text/javascript" src="https://cdn.iw3c.com.cn/html5/debug-error/js/countdown.js"></script>
+  <script type="text/javascript" src="https://cdn.iw3c.com.cn/html5/debug-error/api/"></script>
+  <script type="text/javascript" src="https://cdn.iw3c.com.cn/console.js"></script>
+ </head>
+ <body style="height:100% !important">
+  <div id="visit_info"></div>
+  <div class="container-fluid main-container text-center" style="position:relative;top:200px">
+   <div class="row">
+    <div class="col-lg-12">
+     <h2>网站维护中...</h2>
+     <div class="center-block underline-stroke"></div>
+    </div>
+    <div class="col-lg-12">
+     <p style="font-size:16px">您当前访问的页面[<span id="site_reffer_url">xxxxxxxxxx</span>]因<span id="error_msg" style="color:red"></span>,<span id="error_action" style="color:red">正在维护调试中</span>,我们将在稍后恢复您的访问...</p>
+    </div>
+   </div>
+
+  </div>
+  <script>
+    $("#error_msg").html("原站节点不存在或者已离线");
+    $("#error_action").html("暂时无法访问,请联系IDC 管理员处理");
+    $("#site_reffer_url").html(iw3c_debug_data["reffer_url"] != "unknown" ? iw3c_debug_data["reffer_url"] : window.location.href);
+    var localtime = new Date();
+    content = "请求ID:&nbsp; " + iw3c_debug_data["request_id"] + "<br/>请求时间:&nbsp; " + iw3c_debug_data["request_time"] + "<br/>请求页面:&nbsp; " + iw3c_debug_data["reffer_url"] + "<br/>设备IP:&nbsp; " + iw3c_debug_data["client_ip"] + "<br/>设备UA:&nbsp; " + iw3c_debug_data["user_agent"] + "<br/>" + "<div class=\"text-center\"   style=\"margin-top: 16px\">Copyright 2020 - " +  localtime.getFullYear() + " © atonal.cn 无调网络工作室 | <a href=\"https://beian.miit.gov.cn\">苏ICP备20030957号-1</a> | All Right Save</div>"
+    $("#visit_info").html(content);
+
+    // 调整字幕位置
+    setInterval(() =>{
+	    var w = window.screen.width;
+	    var h = window.screen.height;
+	    $("#visit_info").attr("style", "position:fixed;top:" + (h - 400) + "px;left:" + ((w / 2) - 300) + "px;font-size:6px")
+    },10);
+
+  </script>
+ </body>
+</html>
