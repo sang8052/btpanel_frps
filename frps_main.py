@@ -441,7 +441,8 @@ openssl x509 -req -days 3650 -in /tmp/frp_cert/client.csr -CA %s -CAkey %s -CAcr
         # 强制终止所有后台正在运行的frps 进程
         os.system('pkill -9 frps')
         self._format_config()
-        pid = public.ExecShell('nohup ./bin/frps -c ./data/conf/frps.ini & \n echo $! ', None, True, plugin_path)
+        # fix 修复 命令中 \n 导致ubuntu 执行失败的bug
+        pid = public.ExecShell('nohup ./bin/frps -c ./data/conf/frps.ini &  echo $! ', None, True, plugin_path)
         pid = pid[0].replace("\n", "")
         db_obj = self.__db()
         db_obj.table('global_config').where('`group` = ? and `name` = ?', ('frps', 'run_status')).update(

@@ -48,7 +48,13 @@ Install()
     mkdir ${install_path}/data/tls/ca/
     mkdir ${install_path}/data/tls/server/
     echo '生成服务器CA 证书中'
-    cp /etc/pki/tls/openssl.cnf $install_path/data/tls/openssl.cnf
+    # centos 的 openssl.cnf 文件地址 /etc/pki/tls/openssl.cnf
+    # ubuntu 的 openssl.cnf 文件地址 usr/lib/ssl/openssl.cnf
+    if [ ! -f /etc/pki/tls/openssl.cnf ];then
+        cp /etc/pki/tls/openssl.cnf $install_path/data/tls/openssl.cnf
+    else:
+        cp /usr/lib/ssl/openssl.cnf $install_path/data/tls/openssl.cnf
+    fi
     openssl genrsa -out $install_path/data/tls/ca/ca.key 2048
     openssl req -x509 -new -nodes -key $install_path/data/tls/ca/ca.key -subj "/CN=${server_ip}.frp.plugin.bt.cn" -days 5000 -out $install_path/data/tls/ca/ca.crt
     echo '生成服务器证书中'
