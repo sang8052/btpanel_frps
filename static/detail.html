@@ -1,0 +1,106 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="/static/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.iw3c.com.cn/font_icon/font_awesome/4.7.0/css/font-awesome.css">
+</head>
+
+<body>
+<div class="container" style="margin-top: 16px;margin-left: 8px">
+    <div class="row">
+        <div class="col-xs-2" style="text-align: right" >
+            <span style="position: relative;top:8px">证书名称</span>
+        </div>
+        <div class="col-xs-8">
+            <input class="form-control" id="cert_name" style="width: 80%">
+        </div>
+         <div class="col-xs-2">
+             <button style="position: relative;left: -104px" class="btn btn-success" onclick="button_on_update()" >修改</button>
+        </div>
+    </div>
+     <div class="row" style="margin-top: 16px">
+        <div class="col-xs-2" style="text-align: right" >
+            <span style="position: relative;top:8px">备注</span>
+        </div>
+        <div class="col-xs-8">
+            <textarea id="cert_extend" class="form-control" style="width: 80%;height: 100px"></textarea>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 16px">
+        <div class="col-xs-2" style="text-align: right" >
+            <span style="position: relative;top:8px">签发时间</span>
+        </div>
+        <div class="col-xs-8">
+            <input class="form-control" id="cert_date" readonly style="width: 80%;background-color: white">
+        </div>
+    </div>
+    <div class="row" style="margin-top: 16px">
+        <div class="col-xs-2" style="text-align: right" >
+            <span style="position: relative;top:8px">证书文件</span>
+        </div>
+        <div class="col-xs-8">
+            <button class="btn btn-default" onclick="download_file('client.crt',data.cert_crt)"><i class="fa fa-download"  style="margin-right: 8px" aria-hidden="true"></i>crt 文件</button>
+            <button class="btn btn-default" onclick="download_file('client.csr',data.cert_csr)"><i class="fa fa-download"  style="margin-right: 8px" aria-hidden="true"></i>csr 文件</button>
+            <button class="btn btn-default" onclick="download_file('client.key',data.cert_key)"><i class="fa fa-download"  style="margin-right: 8px" aria-hidden="true"></i>key 文件</button>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="/static/js/jquery-2.2.4.min.js"></script>
+<script src="/static/layer/layer.js?version=7.9.2"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+function getQueryVariable(variable)
+{
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+    }
+    return(false);
+}
+function download_file(filename,filecontent){
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(filecontent));
+    element.setAttribute('download', filename);
+    element.click();
+}
+
+  function format_time(time=false){
+        if (time) var date = new Date(time*1000);
+        else  date = new Date();
+        var year = date.getFullYear(),
+        month = ("0" + (date.getMonth() + 1)).slice(-2),
+        sdate = ("0" + date.getDate()).slice(-2),
+        hour = ("0" + date.getHours()).slice(-2),
+        minute = ("0" + date.getMinutes()).slice(-2),
+        second = ("0" + date.getSeconds()).slice(-2);
+        var result = year + "-"+ month +"-"+ sdate +" "+ hour +":"+ minute +":" + second;
+        return result;
+    }
+
+var cert_id = getQueryVariable('cert_id');
+var data = {};
+var load = layer.load();
+parent.frps.send_request('get_cert_detail','post',{'id':cert_id},(res)=>{
+     data = res.data;
+     $("#cert_date").val(format_time(data.create_time));
+     $("#cert_name").val(data.name);
+     $("#cert_extend").val(data.extend);
+     layer.close(load);
+ })
+
+function button_on_update(){
+load = layer.load();
+parent.frps.send_request('update_cert','post',{'cert_name': $("#cert_name").val(),'cert_extend': $("#cert_extend").val(),'id':cert_id},(res)=>{
+    layer.close(load);
+    layer.msg('修改证书详情成功',{icon:1,time:1500},()=>{
+        parent.layer.close(parent.frps.layer);
+    })
+ })
+}
+
+
+</script>
